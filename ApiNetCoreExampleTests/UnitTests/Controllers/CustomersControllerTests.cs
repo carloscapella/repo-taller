@@ -92,6 +92,15 @@ namespace ApiNetCoreExampleTests.UnitTests.Controllers
                 LastName = "Capella"
             };
         }
+        private Customer GetCustomer()
+        {
+            return new Customer
+            {
+                Id = "2",
+                FirstName = "Carlos",
+                LastName = "Capella"
+            };
+        }
 
         [Fact]
         private void CreateCustomerShouldReturnOk()
@@ -164,8 +173,43 @@ namespace ApiNetCoreExampleTests.UnitTests.Controllers
             Assert.Equal(400, result.StatusCode);
         }
 
-
         #endregion
+        #region GetCustomerTest
+        [Fact]
+        public void GetCustomerShouldReturnNotFound()
+        {
+            Customer valorreturn = null;
+            _customerService.Setup(x => x.Find(It.IsAny<string>())).Returns(valorreturn);   
+            var response = _customersController.GetCustomer("123");
+            var result = Assert.IsType<NotFoundResult>(response);
+            Assert.Equal(404, result.StatusCode);
+            
+        }
+        [Fact]
+        public void GetCustomerShouldReturnOk()
+        {
+            var data = GetCustomer();
+            _customerService.Setup(x => x.Find(It.IsAny<string>())).Returns(data);     
+            var response = _customersController.GetCustomer("123");
+            var result = Assert.IsType<OkObjectResult>(response);
+            Assert.Equal(200, result.StatusCode);
+            Assert.NotNull(data);
+
+        }
+        [Fact]
+        public void GetCustomerBadRequest()
+        {
+
+            _customerService.Setup(x => x.Find(It.IsAny<string>()))
+            .Throws(new Exception());
+            var response = _customersController.GetCustomer("123");
+            var result = Assert.IsType<BadRequestResult>(response);
+            Assert.Equal(400, result.StatusCode);
+
+
+        }
+        #endregion
+
 
     }
 }
