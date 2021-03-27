@@ -182,8 +182,7 @@ namespace ApiNetCoreExampleTests.UnitTests.Controllers
             _customerService.Setup(x => x.Find(It.IsAny<string>())).Returns(valorreturn);   
             var response = _customersController.GetCustomer("123");
             var result = Assert.IsType<NotFoundResult>(response);
-            Assert.Equal(404, result.StatusCode);
-            
+            Assert.Equal(404, result.StatusCode);            
         }
         [Fact]
         public void GetCustomerShouldReturnOk()
@@ -194,19 +193,15 @@ namespace ApiNetCoreExampleTests.UnitTests.Controllers
             var result = Assert.IsType<OkObjectResult>(response);
             Assert.Equal(200, result.StatusCode);
             Assert.NotNull(data);
-
         }
         [Fact]
         public void GetCustomerBadRequest()
         {
-
             _customerService.Setup(x => x.Find(It.IsAny<string>()))
             .Throws(new Exception());
             var response = _customersController.GetCustomer("123");
             var result = Assert.IsType<BadRequestResult>(response);
             Assert.Equal(400, result.StatusCode);
-
-
         }
         #endregion
 
