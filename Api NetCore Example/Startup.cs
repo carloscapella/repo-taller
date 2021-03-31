@@ -1,7 +1,9 @@
+using Api_NetCore_Example.Database;
 using Api_NetCore_Example.Repositories;
 using Api_NetCore_Example.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api_NetCore_Example
 {
@@ -28,6 +31,8 @@ namespace Api_NetCore_Example
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TallerDbContext>(options =>
+                options.UseNpgsql("Server=localhost;Database=example;Port=5432;User Id=postgres;Password=postgres"));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -39,6 +44,8 @@ namespace Api_NetCore_Example
             services.AddTransient<ICustomerService, CustomerService>();
 
             services.AddSingleton<ICustomerRepository>(x => new CustomerRepository());
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         }
 
