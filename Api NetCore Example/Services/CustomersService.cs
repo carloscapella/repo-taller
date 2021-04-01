@@ -16,17 +16,27 @@ namespace Api_NetCore_Example.Services
             _customerRepository = customerRepository;
         }
 
-        public Customer Find(string customerId)
+        public CustomerModel Find(string customerId)
         {
-            return _customerRepository.Find(customerId);
+
+            var customerEntity = _customerRepository.Find(customerId);
+
+            CustomerModel customerModel = null;
+
+            if(customerEntity != null)
+            {
+                customerModel = new CustomerModel(customerEntity);
+            }
+
+            return customerModel;
         }
 
-        public List<Customer> GetAll()
+        public List<CustomerModel> GetAll()
         {
             return _customerRepository.GetAll();
         }
 
-        public Customer Create(CustomerCreateCmd command)
+        public CustomerModel Create(CustomerCreateCmd command)
         {
             // 1. validar
             var customer = _customerRepository.Find(command.Id);
@@ -52,10 +62,7 @@ namespace Api_NetCore_Example.Services
                 throw new GenericValidationException(errorList);
             }
 
-
-
-            // codigo taller pasado
-            
+            // codigo taller pasado            
 
             if (customer != null)
             {
@@ -66,7 +73,7 @@ namespace Api_NetCore_Example.Services
             return _customerRepository.Create(command);
         }
 
-        public Customer Update(string customerId, CustomerUpdateCmd command)
+        public CustomerModel Update(string customerId, CustomerUpdateCmd command)
         {
             var customer = _customerRepository.Find(customerId);
 
@@ -75,10 +82,14 @@ namespace Api_NetCore_Example.Services
                 throw new NotFoundException();
             }
 
-            return _customerRepository.Update(customerId, command);
+            var customerEntity = _customerRepository.Update(customerId, command);
+
+            CustomerModel customerModel = new CustomerModel(customerEntity);
+
+            return customerModel;
         }
 
-        public Customer Delete(string customerId)
+        public CustomerModel Delete(string customerId)
         {
             var customer = _customerRepository.Find(customerId);
 
@@ -87,9 +98,10 @@ namespace Api_NetCore_Example.Services
                 throw new NotFoundException();
             }
 
-            _customerRepository.Delete(customer);
+            //_customerRepository.Delete(customer);
 
-            return customer;
+            //return customer;
+            return null;
         }
     }
 }

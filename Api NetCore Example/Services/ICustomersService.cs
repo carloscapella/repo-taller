@@ -5,10 +5,10 @@ namespace Api_NetCore_Example.Services
 {
     public interface ICustomerService
     {
-        public List<Customer> GetAll();
-        public Customer Find(string customerId);
-        public Customer Create(CustomerCreateCmd command);
-        public Customer Update(string customerId, CustomerUpdateCmd command);
-        public Customer Delete(string customerId);
+        public List<CustomerModel> GetAll();
+        public CustomerModel Find(string customerId);
+        public CustomerModel Create(CustomerCreateCmd command);
+        public CustomerModel Update(string customerId, CustomerUpdateCmd command);
+        public CustomerModel Delete(string customerId);
     }
 }

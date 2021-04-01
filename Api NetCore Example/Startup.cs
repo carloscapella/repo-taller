@@ -1,18 +1,13 @@
+using Api_NetCore_Example.Database;
 using Api_NetCore_Example.Repositories;
 using Api_NetCore_Example.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api_NetCore_Example
 {
@@ -29,6 +24,10 @@ namespace Api_NetCore_Example
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddDbContext<TallerDbContext>(options =>
+                options.UseNpgsql("Server=localhost;Database=talleruno;Port=5432;User Id=postgres;Password=postgres")
+            );
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -38,7 +37,14 @@ namespace Api_NetCore_Example
 
             services.AddTransient<ICustomerService, CustomerService>();
 
-            services.AddSingleton<ICustomerRepository>(x => new CustomerRepository());
+            var contextOptions = new DbContextOptionsBuilder<TallerDbContext>()
+            .UseNpgsql(@"Server=localhost;Database=talleruno;Port=5432;User Id=postgres;Password=postgres")
+            .Options;
+
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+            //services.AddTransient<ICustomerRepository>(x => new CustomerRepository(TallerDbContext));
+            //services.AddSingleton<ICustomerRepository>(x => new CustomerRepository());
 
         }
 

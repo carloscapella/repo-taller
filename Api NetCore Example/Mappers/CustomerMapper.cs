@@ -4,9 +4,9 @@ namespace Api_NetCore_Example.Mappers
 {
     public static class CustomerMapper
     {
-        public static Customer FromCustomerCreateCmd(CustomerCreateCmd command)
+        public static CustomerModel FromCustomerCreateCmd(CustomerCreateCmd command)
         {
-            Customer newCustomer = new Customer();
+            CustomerModel newCustomer = new CustomerModel();
 
             newCustomer.Id = command.Id;
             newCustomer.FirstName = command.FirstName;

@@ -1,4 +1,5 @@
-﻿using Api_NetCore_Example.Mappers;
+﻿using Api_NetCore_Example.Database;
+using Api_NetCore_Example.Entities;
 using Api_NetCore_Example.Models;
 using System;
 using System.Collections.Generic;
@@ -8,53 +9,69 @@ namespace Api_NetCore_Example.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private List<Customer> _customerList;
+        //private List<CustomerModel> _customerList;
+
+        private TallerDbContext _tallerDbContext;
 
         public CustomerRepository()
         {
-            _customerList = new List<Customer>
-            {
-                new Customer { Id = "1", FirstName = "Carlos", LastName = "Capella" },
-                new Customer { Id = "2", FirstName = "Luis", LastName = "Suarez" },
-                new Customer { Id = "3", FirstName = "pepe", LastName = "Lopez" }
-            };
+
         }
 
-        public List<Customer> GetAll()
+
+        public CustomerRepository(TallerDbContext tallerDbContext)
         {
-            return _customerList;
+            _tallerDbContext = tallerDbContext;
+        }
+
+        public List<CustomerModel> GetAll()
+        {
+            var entityList = _tallerDbContext.Customers.ToList();
+
+            var modelList = new List<CustomerModel>();
+            
+            foreach (var item in entityList)
+            {
+                modelList.Add(new CustomerModel(item));
+            }
+
+            return modelList;            
         }
 
         public Customer Find(string customerId)
         {
-            var customer = _customerList.FirstOrDefault(x => x.Id.Equals(customerId));
+            Guid customerIdCasted = Guid.Parse(customerId);
 
-            return customer;
+            return _tallerDbContext.Customers.FirstOrDefault(x => x.Id.Equals(customerIdCasted));
+            
         }
 
-        public void Delete(Customer customer)
+        public void Delete(CustomerModel customer)
         {
-            _customerList.Remove(customer);
+            //_customerList.Remove(customer);
         }
 
         public Customer Update(string customerId, CustomerUpdateCmd command)
         {
             // 1 buscamos al elemento en la lista
-            var customerInDataBase = Find(customerId);
+            var customerEntity = Find(customerId);
+          
+            customerEntity.Name = command.FirstName;
+            customerEntity.Surename = command.LastName;
 
-            customerInDataBase.FirstName = command.FirstName;
-            customerInDataBase.LastName = command.LastName;
+            _tallerDbContext.SaveChanges();
 
-            return customerInDataBase;
+            return customerEntity;
         }
 
-        public Customer Create(CustomerCreateCmd command)
+        public CustomerModel Create(CustomerCreateCmd command)
         {
-            var newCustomer = CustomerMapper.FromCustomerCreateCmd(command);
+            //var newCustomer = CustomerMapper.FromCustomerCreateCmd(command);
 
-            _customerList.Add(newCustomer);
-
-            return newCustomer;
+            //_customerList.Add(newCustomer);
+            //_tallerDbContext.Customers.Add(asdasdas);
+            //_tallerDbContext.SaveChanges();
+            return null; //newCustomer;
 
         }
     }

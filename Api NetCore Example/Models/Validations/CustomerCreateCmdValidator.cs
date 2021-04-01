@@ -1,8 +1,4 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Api_NetCore_Example.Models.Validations
 {
@@ -21,13 +17,13 @@ namespace Api_NetCore_Example.Models.Validations
         private void ApplyValidations()
         {
             RuleFor(customer => customer.Id)
-                
+
                 .NotNull()
                 .WithMessage("El id no puede ser nulo")
-                
+
                 .Must(ShouldHave5CharactersLengh)
                 .WithMessage("El id no puede superar los 5 caracteres")
-                
+
                 .Must(ShouldNotBeRepeated)
                 .WithMessage("El id está repetido");
         }
