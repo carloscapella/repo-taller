@@ -1,4 +1,5 @@
-﻿using Api_NetCore_Example.Models;
+﻿using Api_NetCore_Example.Entities;
+using Api_NetCore_Example.Models;
 using Api_NetCore_Example.Models.Exceptions;
 using Api_NetCore_Example.Repositories;
 using Api_NetCore_Example.Services;
@@ -29,7 +30,7 @@ namespace ApiNetCoreExampleTests.UnitTests.Services
                 LastName = "otro"
             };
 
-            CustomerModel nullCustomer = null;
+            Customer nullCustomer = null;
 
             _customerRepositoryMock.Setup(x => x.Find(It.IsAny<string>())).Returns(nullCustomer);
 
@@ -51,7 +52,7 @@ namespace ApiNetCoreExampleTests.UnitTests.Services
                 LastName = "Pedro"
             };
 
-            CustomerModel nullCustomer = null;
+            Customer nullCustomer = null;
 
             _customerRepositoryMock.Setup(x => x.Find(It.IsAny<string>())).Returns(nullCustomer);
 
