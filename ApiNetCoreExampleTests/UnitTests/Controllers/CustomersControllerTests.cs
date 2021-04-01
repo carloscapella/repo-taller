@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace ApiNetCoreExampleTests.UnitTests.Controllers
@@ -29,9 +28,9 @@ namespace ApiNetCoreExampleTests.UnitTests.Controllers
                 _logger.Object);
         }
 
-        private List<Customer> GetCustomerList()
+        private List<CustomerModel> GetCustomerList()
         {
-            return new List<Customer> { new Customer { Id = "1", FirstName = "Pepe", LastName = "Perez" } };            
+            return new List<CustomerModel> { new CustomerModel { Id = "1", FirstName = "Pepe", LastName = "Perez" } };
         }
 
         #region GetAllCustomers tests
@@ -50,7 +49,7 @@ namespace ApiNetCoreExampleTests.UnitTests.Controllers
             Assert.Equal(200, result.StatusCode);
             Assert.NotNull(result.Value);
 
-            var responseData = Assert.IsType<List<Customer>>(result.Value);
+            var responseData = Assert.IsType<List<CustomerModel>>(result.Value);
 
             Assert.NotEmpty(responseData);
         }
@@ -83,9 +82,9 @@ namespace ApiNetCoreExampleTests.UnitTests.Controllers
             };
         }
 
-        private Customer GetCreatedCustomer()
+        private CustomerModel GetCreatedCustomer()
         {
-            return new Customer
+            return new CustomerModel
             {
                 Id = "2",
                 FirstName = "Carlos",
@@ -102,8 +101,8 @@ namespace ApiNetCoreExampleTests.UnitTests.Controllers
 
             _customerService.Setup(x => x.Create(It.IsAny<CustomerCreateCmd>()))
                 .Returns(createdCustomer);
-                
- 
+
+
             var response = _customersController.CreateCustomer(customerCreateCmd);
 
             var result = Assert.IsType<CreatedResult>(response);
@@ -111,7 +110,7 @@ namespace ApiNetCoreExampleTests.UnitTests.Controllers
             Assert.Equal(201, result.StatusCode);
             Assert.NotNull(result.Value);
 
-            var responseData = Assert.IsType<Customer>(result.Value);
+            var responseData = Assert.IsType<CustomerModel>(result.Value);
 
             Assert.NotNull(responseData);
             Assert.NotNull(responseData.Id);
